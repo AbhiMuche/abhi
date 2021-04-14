@@ -1,0 +1,35 @@
+Number of Unique Observations
+
+The number of unique rows by a group can easily be calculated with PROC FREQ and PROC MEANS. 
+The following program explains how we can calculate number of observations in a categorical variable with Data Step.
+
+data aaa2;
+set abcd (drop = y);
+retain z;
+if first.x then z = 1;
+else z = z + 1;
+by x;
+if last.x then output;
+run;
+
+****Suppose you have more than 1 grouping variable****;
+data temp;
+input ID ID1 Score;
+cards;
+1 1 25
+1 1 26
+1 2 27
+1 2 29
+2 1 28
+2 1 29
+2 2 31
+;
+run;
+data temp2;
+set temp;
+by ID ID1;
+if first.ID or first.ID1 then N = 1;
+else N+1;
+proc print;
+run;
+****When you have more than 1 grouping variable, we can use multiple FIRST. statements with OR operator to generate serial numbers****;
